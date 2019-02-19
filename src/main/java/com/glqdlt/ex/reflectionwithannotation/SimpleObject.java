@@ -9,6 +9,74 @@ import java.util.Date;
  * 2019-02-19
  */
 public class SimpleObject {
+    public String getStringType() {
+        return stringType;
+    }
+
+    public void setStringType(String stringType) {
+        this.stringType = stringType;
+    }
+
+    public Integer getIntegerType() {
+        return integerType;
+    }
+
+    public void setIntegerType(Integer integerType) {
+        this.integerType = integerType;
+    }
+
+    public int getIntType() {
+        return intType;
+    }
+
+    public void setIntType(int intType) {
+        this.intType = intType;
+    }
+
+    public long getLongType() {
+        return longType;
+    }
+
+    public void setLongType(long longType) {
+        this.longType = longType;
+    }
+
+    public Long getLongObjectType() {
+        return longObjectType;
+    }
+
+    public void setLongObjectType(Long longObjectType) {
+        this.longObjectType = longObjectType;
+    }
+
+    public Date getDateType() {
+        return dateType;
+    }
+
+    public void setDateType(Date dateType) {
+        this.dateType = dateType;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
+    }
+
+    public String getSkip() {
+        return skip;
+    }
+
+    public void setSkip(String skip) {
+        this.skip = skip;
+    }
+
+
+    public void setNotMethod(String notMethod) {
+        this.notMethod = notMethod;
+    }
 
     @IndexAnnotation
     private String stringType;
@@ -24,8 +92,12 @@ public class SimpleObject {
                 return "zero";
             case 1:
                 return "one";
+            case 2:
+                return "two";
+            case 3:
+                return "three";
             default:
-                return String.valueOf(_t);
+                return String.valueOf(_t+"_String");
         }
     }
 

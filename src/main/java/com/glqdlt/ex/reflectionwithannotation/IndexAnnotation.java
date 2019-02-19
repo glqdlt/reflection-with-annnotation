@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * @author glqdlt
  * 2019-02-19
  */
-@Target(ElementType.ANNOTATION_TYPE.FIELD)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IndexAnnotation {
     String getMethodNamePrefix() default "get";
