@@ -31,6 +31,7 @@ public class ObjectMapperTest {
                 }).collect(Collectors.toList());
 
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setErrorSkip(true);
         objectMapper.consume(_dummy);
     }
 }

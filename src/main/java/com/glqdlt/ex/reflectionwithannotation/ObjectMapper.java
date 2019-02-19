@@ -22,6 +22,13 @@ import java.util.stream.Stream;
 @Slf4j
 public class ObjectMapper {
 
+    public void setErrorSkip(boolean errorSkip) {
+        this.errorSkip = errorSkip;
+    }
+
+    private boolean errorSkip = false;
+
+
     public LocalDateTime convertToLocalDateTime(Date dateToConvert) {
         return dateToConvert.toInstant()
                 .atZone(ZoneId.systemDefault())
@@ -78,8 +85,12 @@ public class ObjectMapper {
                     }
                 });
             }}catch(RuntimeException e){
-                log.error(e.getMessage(),e);
-                log.info("Skip field : {}",f.getName());
+                if(errorSkip){
+                    log.error(e.getMessage(),e);
+                    log.info("Skip field : {}",f.getName());
+                }else{
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
