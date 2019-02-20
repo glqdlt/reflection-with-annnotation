@@ -1,7 +1,5 @@
 package com.glqdlt.ex.reflectionwithannotation;
 
-import lombok.Data;
-
 import java.util.Date;
 
 /**

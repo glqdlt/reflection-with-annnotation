@@ -12,6 +12,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IndexAnnotation {
-    String getMethodNamePrefix() default "get";
+    String customeColumnName() default "";
+    String getMethodNamePrefix() default "";
     boolean parseSkip() default false;
 }

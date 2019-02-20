@@ -35,15 +35,15 @@ public class ObjectMapper {
                 .toLocalDateTime();
     }
 
-    <T> void consume(List<T> list){
-        if(list.size() < 1){
+    <T> void consume(List<T> list) {
+        if (list.size() < 1) {
             return;
         }
 
         Class<?> t = list.get(0).getClass();
         String typeName = t.getTypeName();
         String name = t.getName();
-        log.info("ClassName : {}, TypeName : {}",name,typeName);
+        log.info("ClassName : {}, TypeName : {}", name, typeName);
         Field[] f_d = t.getDeclaredFields();
         Method[] m_d = t.getDeclaredMethods();
 
@@ -52,7 +52,7 @@ public class ObjectMapper {
                     Annotation[] annotations = _x.getDeclaredAnnotations();
                     for (Annotation a : annotations) {
                         if (a instanceof IndexAnnotation) {
-                            if(!((IndexAnnotation) a).parseSkip()){
+                            if (!((IndexAnnotation) a).parseSkip()) {
                                 return true;
                             }
                         }
@@ -60,35 +60,37 @@ public class ObjectMapper {
                     return false;
                 }).collect(Collectors.toList());
 
-        for(Field f : fields){
+        for (Field f : fields) {
             Annotation[] annotations = f.getDeclaredAnnotations();
 
-            try{
-            for(Annotation a : annotations){
-                IndexAnnotation _a = (IndexAnnotation) a;
-                String methodName = (_a.getMethodNamePrefix()+f.getName()).toLowerCase();
-                Method m = Stream.of(m_d).filter(_x -> {
-                    String d_m = _x.getName().toLowerCase();
-                    return d_m.equals(methodName);
-                }).findAny().orElseThrow(() -> new RuntimeException(String.format("Not Found MethodName %s",methodName)));
+            try {
+                for (Annotation a : annotations) {
+                    IndexAnnotation _a = (IndexAnnotation) a;
+//                    FIXME isBoolean 에 대한 처리
+                    String methodName = (_a.getMethodNamePrefix().equals("") ? "get" : _a.getMethodNamePrefix() + f.getName()).toLowerCase();
+                    Method m = Stream.of(m_d).filter(_x -> {
+                        String d_m = _x.getName().toLowerCase();
+                        return d_m.equals(methodName);
+                    }).findAny().orElseThrow(() -> new RuntimeException(String.format("Not Found MethodName %s", methodName)));
 
-                list.forEach(x -> {
-                    try {
-                        Object o = m.invoke(x);
-                        if(f.getType().equals(Date.class) && o != null){
-                            log.info("{} : {}",f.getName(),convertToLocalDateTime((Date)o).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                        }else{
-                            log.info("{} : {}",f.getName(),String.valueOf(o));
+                    list.forEach(x -> {
+                        try {
+                            Object o = m.invoke(x);
+                            if (f.getType().equals(Date.class) && o != null) {
+                                log.info("{} : {}", f.getName(), convertToLocalDateTime((Date) o).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                            } else {
+                                log.info("{} : {}", f.getName(), String.valueOf(o));
+                            }
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            log.error(e.getMessage(), e);
                         }
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        log.error(e.getMessage(),e);
-                    }
-                });
-            }}catch(RuntimeException e){
-                if(errorSkip){
-                    log.error(e.getMessage(),e);
-                    log.info("Skip field : {}",f.getName());
-                }else{
+                    });
+                }
+            } catch (RuntimeException e) {
+                if (errorSkip) {
+                    log.error(e.getMessage(), e);
+                    log.info("Skip field : {}", f.getName());
+                } else {
                     throw new RuntimeException(e);
                 }
             }
